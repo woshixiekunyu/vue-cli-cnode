@@ -1,0 +1,265 @@
+.detail{
+    background-color: #ccc;
+    width: 100%;
+    padding-bottom: 50px;
+    a{
+        text-decoration: none;
+        color:#08c;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+    .top{
+        background-color: #fff;
+        padding: 0 10px;
+        border-bottom: 1px solid #ccc;
+        .arttitle{
+            display: flex;
+            height: 40px;
+            line-height: 50px;
+            padding: 5px 0;
+            .flag{
+                height: 20px;
+                span{
+                    line-height: 20px;
+                    padding: 0 4px;
+                    background-color: #80BD01;
+                    color:#fff;
+                    font-size: 12px;
+                    border-radius: 5px;
+                    display: inline-block;
+                    text-align: center;
+                }
+            }
+            .detail-title{
+                    text-align: left;
+                    text-indent: 10px;
+                    h2{
+                        display: inline-block;
+                        margin: 0;
+                        padding: 0;
+                        font-size: 26px;
+                        line-height: 40px;
+                    }
+                    
+                }
+        }
+        .baseInfo{
+            line-height: 30px;
+            height: 30px;
+            display: flex;
+            padding: 10px 0;
+            .come{
+                flex: 9;
+                font-size: 12px;
+                color:#777;
+            }
+            .collect{
+                flex: 1;
+                margin-right: 30px;
+                span{
+                    width: 100px;
+                    background-color: #ccc;
+                    font-size: 16px;
+                    display: inline-block;
+                    border: 1px solid #ccc;
+                    text-align: center;
+                    line-height: 30px;
+                    cursor: pointer;
+                    &:hover{
+                        background-color: #999;
+                    }
+                }
+                
+            }
+        }
+    }
+    .content{
+        background-color: #fff;
+        padding: 10px 20px;
+        word-break: break-all;
+        code{
+            display: block;
+        }
+        .markdown-text{
+            h1,
+            h2,
+            h3{
+                color:#333;
+                border-bottom: 1px solid #eee;
+            }
+            p{
+                margin: 15px 0;
+                font-size: 14px;
+            }
+            ul{
+                margin-left: 20px;
+                li{
+                    list-style: initial;
+                    font-size: 14px;
+                }
+            }
+            
+            img{
+                width: 100%;
+            }
+            table{
+                border-collapse: collapse;
+                tr{
+                    td{
+                         max-width: 700px;
+                        text-align: center;
+                        border: 1px solid #ddd;
+                        padding: 5px;
+                    }
+                }
+            }
+            
+            
+        }
+    }
+    .disction{
+        background-color: #f6f6f6;
+        width: 100%;
+        word-wrap: break-word;
+        .replyCount{
+            padding: 0 10px;
+            height: 40px;
+            line-height: 40px;
+           
+        }
+        ul{
+            li{
+                min-height: 100px;
+                padding: 10px;
+                border-top: 1px solid #ccc;
+                font-size: 14px;
+                position: relative;
+                .discContent{
+                    word-break: break-word;
+                    display: flex;
+                    .discImg{
+                        flex: 0.5;
+                        img{
+                           width: 30px; 
+                        }
+                    }
+                    .disInfo{
+                        flex: 9;
+                        line-height: 30px;
+                        color: #666;
+                        .discPos{
+                            color: #0099FF;
+                            cursor: pointer;
+                            &:hover{
+                                text-decoration: underline;
+                            } 
+                        }
+                        .discCon{
+                            color: #000;
+                            font-size: 16px;
+                            img{
+                                display: block;
+                            }
+                        }
+                    }
+                    .zan{
+                        flex: 0.5;
+                        .icon_zan{
+                            font-size: 20px;
+                            cursor: pointer;
+                        }                    
+                    }
+                    .toDisc{
+                        position: absolute;
+                        bottom: 10px;
+                        right: 40px;
+                        font-size: 25px;
+                        color: #ccc;
+                        cursor: zoom-in;
+                    }
+                }
+                .setDisc{
+                    width: 100%;
+//                  .setTitle{
+//                      width: 100%;
+//                      height: 40px;
+//                      outline: none;
+//                  }
+                    textarea{
+                        width: 100%;
+                        height: 100px;
+                        outline: none;
+                    }
+                    .button{
+                        border: 0;
+                        width: 80px;
+                        height: 40px;
+                        outline: none;
+                        cursor: pointer;
+                        &:active{
+                            border: 1px solid #ccc;
+                        }
+                    }
+//                  #select{
+//                      width: 80px;
+//                      height: 30px;
+//                      outline: none;
+//                  }
+                }
+            }
+        }
+    }
+    .setupArticleDisc{
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        span{
+            width: 100px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            border: 1px solid #009CEB;
+            background-color: #009CEB;
+            cursor: pointer;
+            &:hover{
+                background-color: #ff0;
+            }
+        }
+    }
+    .tosetDisC{
+        textarea{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100px;
+            outline: none;
+        }
+        .button{
+            border: 0;
+            width: 80px;
+            height: 40px;
+            outline: none;
+            cursor: pointer;
+            display: block;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            &:hover{
+                background-color: #d00;
+                color: #fff;
+            }
+        }
+    }
+    .active{
+        color: #f00;
+    }
+    .showSetDisc{
+        display: block;
+    }
+    .hideSetDisc{
+        display: none;
+    }
+}

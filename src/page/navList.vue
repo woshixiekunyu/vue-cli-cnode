@@ -19,7 +19,7 @@
 						<el-menu-item index="3"><i class="el-icon-message"></i>消息管理</el-menu-item>
 					</el-menu>
 					<div class="toLogin" @click="toLogin">
-						<i class="el-icon-message" v-model="islogin"></i>{{islogin}}</div>
+						<i class="el-icon-message"></i>{{isUser?'已登录(退出)':'登录'}}</div>
 				</el-col>
 			</el-row>
 		</div>
@@ -61,6 +61,7 @@
 	
 </style>
 <script>
+	import router from '@/router/index';
 	import {Api} from '@/api/index';
 	import {mapState} from 'vuex';
 	import {isLogin} from '@/util/getIsLogin';
@@ -72,45 +73,52 @@
 		},
 		methods: {
 			handleOpen(key, keyPath) {
-				console.log(key, keyPath);
+//				console.log(key, keyPath);
 			},
 			handleClose(key, keyPath) {
-				console.log(key, keyPath);
+//				console.log(key, keyPath);
 			},
 			abc(a){
 				this.$store.commit('getTopicTab',a);
 			},
 			toLogin(){
-				if(this.islogin === '登录'){
+				if(!this.isUser){
 					this.$router.push({path:'/login'})
 				}else{
 					var now = new Date();
 					now.setDate(now.getDate()-22)
-					console.log(now)
-					document.cookie = 'userInfo='+true+';expires='+now;
-					this.$store.commit('getUserInfo','登录')
+//					console.log(now)
+					document.cookie = 'userInfo='+{}+';expires='+now;
 			        this.$notify.success({
 			          title: 'Tip',
 			          message: '已退出登录',
 			          offset: 100
 			        });
+			        this.$store.commit('getIsUser',false)
+			        router.push({path:'/navList/topicList'})
 				}
 			}
 		},
 		computed:{
 			...mapState({
-				islogin:state=>state.user.userInfo
-			})
+				isUser:state=>state.user.isUser,
+//				userInfo:state=>state.user.userInfo,
+			}),
 		},
 		mounted(){
 			var that = this;
-			var isLogining = isLogin.getIsLogin();
+			var isLogining = isLogin.getIsLogin('user') ;
+//			console.log(isLogining)
 			if(isLogining){
-				this.$store.commit('getUserInfo','已登录(退出)')
+				this.$store.commit('getIsUser',true)
+				this.$store.commit('getUserInfo',isLogining)
+//				console.log(this.$store.state.user.isUser)
 			}else{
-				this.$store.commit('getUserInfo','登录')
+				this.$store.commit('getIsUser',false)
+				this.$store.commit('getUserInfo',isLogining)
+//				console.log(this.$store.state.user.isUser)
 			}
-			
+//			console.log(userInfo)
 			this.$store.commit('getTopicTab',this.tab)
 		}
 	}

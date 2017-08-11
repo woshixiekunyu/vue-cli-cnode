@@ -63,6 +63,7 @@
 	import axios from '@/api/factory';
 	import {mapState} from 'vuex'
 	import {Mate} from '@/util/formate';
+//	import {isLogin} from '@/util/getIsLogin';
 	export default {
 		name:'topicList',
 		
@@ -83,9 +84,9 @@
 		},
 		methods:{
 			onFileChange(e) {
-				console.log(e)
+//				console.log(e)
 			   var files = e.target.files || e.dataTransfer.files;
-			   console.log(files[0])
+//			   console.log(files[0])
 			   if (!files.length) return;
 			      this.createImage(files[0]);
 			   },
@@ -99,7 +100,7 @@
 			       reader.readAsDataURL(file);
 			},
 			handleSizeChange(val) {
-		        console.log(`每页 ${val} 条`);
+//		        console.log(`每页 ${val} 条`);
 		     },
 		    handleCurrentChange(val) {
 		      	var that = this;
@@ -124,7 +125,8 @@
 		      		tab:that.tab
 		      	}
 		      	Api.topic.list(params).then(res=>{
-		      		console.log(res)
+//		      		console.log(res)
+//console.log(this.$store.state.user.isUser)
 					that.topicList = that.topicList.concat(res.data.data.map(function(item){
 						item.last_reply_at = Mate.getNumDate(new Date(item.last_reply_at))
 						return item;
@@ -139,8 +141,7 @@
 				tab:state=>state.common.tab,
 //				page:state=>state.condition.roleListParams,
 				getImg:state=>state.common.image
-			})
-			
+			}),
 		},
 		watch:{
 			tab(val){
@@ -166,9 +167,8 @@
 			var that = this
 //			console.log(console.log(this.params))
 //			that.getTab(that.page,that.tab)
-			
 			that.handleCurrentChange();
-			
+//			console.log(this.$store.state.condition.aaa)
 		}
 		
 	}

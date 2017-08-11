@@ -17,7 +17,7 @@
 					<span>•发布于&nbsp;{{detailInfo.create_at}}&nbsp;•&nbsp;作者<router-link to="">{{loginname}}</router-link>&nbsp;•&nbsp;{{detailInfo.visit_count}}次浏览&nbsp;•&nbsp;来自&nbsp;分享</span>
 				</div>
 				<div class="collect">
-					<span class="collects" @click="collect" v-model="iscollect">{{iscollect}}</span>
+					<span class="collects" @click="collect">{{iscollect}}</span>
 				</div>
 				
 			</div>
@@ -38,7 +38,7 @@
 						</div>
 						<div class="zan">
 							<i class="icon_zan" :class="item.is_uped?'active':''" @click="zan(item.id,idx)">{{zanIcon}}</i>
-							<span class="zanCount">{{item.ups.length}}</span>
+							<span class="zanCount" @click="aaaa(item.is_uped)" v-model="zanLen=item.ups.length">{{item.ups.length}}</span>
 						</div>
 						<div class="toDisc">
 							<span @click="openSetDisc(idx,item.author.loginname)">〓</span>
@@ -82,31 +82,32 @@
 				zanIcon:'☆',
 				setCon:'',
 				isShow:false,
-				watchHtml:''
+				watchHtml:'',
+				zanLen:''
 			}
 		},
 		methods:{
 			//收藏
 			collect(){
 				var that = this;
-				var isLogining = isLogin.getIsLogin();
-				var detailID = this.$route.params.id;
-				var datas = {
-							accesstoken : isLogining,
-							topic_id : detailID
-						}
-				if(isLogining){
+				if(that.isUser){
+					var token = that.userInfo.token
+					var detailID = this.$route.params.id;
+					var datas = {
+						accesstoken : token,
+						topic_id : detailID
+					}
 					if(that.iscollect === '收藏'){
 //						console.log(ApiPost)
 						ApiPost.collect.list(datas).then(res=>{
-							console.log(res)
+//							console.log(res)
 							that.tipsCon = "收藏成功";
 							that.iscollect = '取消收藏';
 							that.showTips(that.tipsCon);
 						})
 					}else{
 						ApiPost.de_collect.list(datas).then(res=>{
-							console.log(res)
+//							console.log(res)
 							that.tipsCon = "取消收藏";
 							that.iscollect = '收藏'
 							that.showTips(that.tipsCon);
@@ -133,26 +134,37 @@
 			//点赞
 			zan(id,idx){
 				var that = this;
-				var isLogining = isLogin.getIsLogin();
-				console.log(id,isLogining)
-				var params = {
-					accesstoken:isLogining
-				}
-				toapesPost.getpost('/reply/'+id+'/ups',params).then(res=>{
-					console.log(res)
-					if(isLogining){
+				
+//				var isLogining = isLogin.getIsLogin();
+//				console.log(id,token)
+				if(that.isUser){
+					var token = that.userInfo.token
+					var params = {
+						accesstoken:token
+					}
+					toapesPost.getpost('/reply/'+id+'/ups',params).then(res=>{
+//					console.log(res)
 						if(res.data.action === 'up'){
 							that.detailInfo.replies[idx].ups.length+=1;
+							var now = new Date();
+							now.getDate(now.setDate()+1100)
+//							document.cookie = 'zan='+idx+';expires='+now;
+//							that.$store.commit('getIsZan',true)
 							that.detailInfo.replies[idx].is_uped = true;
 						}else{
 							that.detailInfo.replies[idx].ups.length-=1;
+							var now = new Date();
+							now.getDate(now.setDate()-1100)
+//							document.cookie = 'zan='+idx+';expires='+now;
+//							that.$store.commit('getIsZan',false)
+							
 							that.detailInfo.replies[idx].is_uped = false;
 						}
-					}else{
-						that.tipsCon = "请先登录";
-						that.showTips(that.tipsCon,true)
-					}
-				})
+					})
+				}else{
+					that.tipsCon = "请先登录";
+					that.showTips(that.tipsCon,true)
+				}
 			},
 			//打开@评论输入框
 			openSetDisc(idx,name){
@@ -168,21 +180,28 @@
 			//@评论
 			toSetDisc(id,idx){
 				var that = this;
-				var isLogining = isLogin.getIsLogin();
-				var msg = that.setCon;
-				var params = {
-					accesstoken:isLogining,
-					content:msg,
-					reply_id:id
+				if(this.isUser){
+					var token = that.userInfo.token
+//					var isLogining = isLogin.getIsLogin();
+					var msg = that.setCon;
+					var params = {
+						accesstoken:token,
+						content:msg,
+						reply_id:id
+					}
+					toapesPost.getpost('topic/'+that.detailInfo.id+'/replies',params).then(res=>{
+	//					console.log(res)
+						that.setCon = ''
+					})
+					this.detailInfo.replies[idx].bool = false;
+					setTimeout(()=>{
+						this.watchHtml = 1;
+					},1000)
+				}else{
+					that.tipsCon = "请先登录";
+					that.showTips(that.tipsCon,true)
 				}
-				toapesPost.getpost('topic/'+that.detailInfo.id+'/replies',params).then(res=>{
-					console.log(res)
-					that.setCon = ''
-				})
-				this.detailInfo.replies[idx].bool = false;
-				setTimeout(()=>{
-					this.watchHtml = 1;
-				},3000)
+				
 			},
 			//打开详情文章输入框
 			setupArticleDisc(){
@@ -195,42 +214,55 @@
 			
 			//评论详情文章
 			toSetDisC(){
-				var msg = this.setCon;
-				if(msg === ''){
-					this.tipsCon = "请输入内容";
-					this.showTips(this.tipsCon,false)
-					this.isShow = false;
-					return
+				if(this.isUser){
+					var token = this.userInfo.token
+					var msg = this.setCon;
+					if(msg === ''){
+						this.tipsCon = "请输入内容";
+						this.showTips(this.tipsCon,false)
+						this.isShow = false;
+						return
+					}
+					var params = {
+						accesstoken:token,
+						content:msg,
+					}
+					toapesPost.getpost('/topic/'+this.detailInfo.id+'/replies',params).then(res=>{
+	//					console.log(res)
+						this.setCon = '';
+						this.isShow = false;
+					})
+					setTimeout(()=>{
+						this.watchHtml = 2;
+					},1000)
+				}else{
+					this.tipsCon = "请先登录";
+					this.showTips(this.tipsCon,true)
 				}
 				
-				var isLogining = isLogin.getIsLogin();
-				var params = {
-					accesstoken:isLogining,
-					content:msg,
-				}
-				toapesPost.getpost('/topic/'+this.detailInfo.id+'/replies',params).then(res=>{
-					console.log(res)
-					this.setCon = '';
-				})
-				setTimeout(()=>{
-					this.watchHtml = 2;
-				},3000)
 				
 			},
-			//封装获取详情页内容
-			getDetailCon(getName){
+			getDetail(token,getName){
 				var that = this;
-				var isLogining = isLogin.getIsLogin();
 				var detailID = this.$route.params.id;
-				Apitoapes.topic('/topic/'+detailID,{accesstoken:isLogining}).then(res=>{
+				Apitoapes.topic('/topic/'+detailID,{accesstoken:token}).then(res=>{
+//					console.log(res.data)
 					that.detailInfo = res.data.data;
 					that.detailInfo.create_at = Mate.getNumDate(new Date(that.detailInfo.create_at))
 					that.replyCount= that.detailInfo.replies.length;
 					that.detailInfo.replies.map(function(item,idx){
-						item.create_at = Mate.getNumDate(new Date(item.create_at));
+						item.create_at = Mate.getNumDate(new Date(item.create_at),idx);
 						item.bool = false;
 						return item
 					})
+//					var zanIdx = isLogin.getIsLogin('zan');
+//					console.log(zanIdx)
+//					if(zanIdx){
+//						that.detailInfo.replies[zanIdx].is_uped = true
+//					}else{
+//						that.detailInfo.replies[zanIdx].is_uped = false
+//					}
+//					console.log(that.detailInfo.replies[zanIdx].is_uped)
 					if(getName){
 						that.loginname = that.detailInfo.author.loginname;
 						if(res.data.data.is_collect){
@@ -241,11 +273,24 @@
 					}
 					
 				})
+			},
+			//封装获取详情页内容
+			getDetailCon(getName){
+				
+				if(this.isUser){
+					var token = this.userInfo.token;
+	//				var isLogining = isLogin.getIsLogin();
+					this.getDetail(token,getName)
+				}else{
+					this.getDetail('',getName)
+				}
 			}
 		},
 		computed:{
-//			watchHtml(){
-//			}
+			...mapState({
+				isUser:state=>state.user.isUser,
+				userInfo:state=>state.user.userInfo,
+			}),
 		},
 		watch:{
 			//监听是否评论并同时显示评论的内容到页面
@@ -253,8 +298,9 @@
 				this.getDetailCon(false)
 			}
 		},
-		mounted(){
+		mounted(){			
 			this.getDetailCon(true)
+//			console.log(this.zanLen)
 		}
 	}
 </script>

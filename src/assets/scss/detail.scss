@@ -207,6 +207,11 @@
 //                      outline: none;
 //                  }
                 }
+                li{
+                    min-height: 50px;
+                    padding: 0px;
+                    border-top: 0;
+                }
             }
         }
     }

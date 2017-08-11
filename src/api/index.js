@@ -49,7 +49,7 @@ class ApiConfig {
 			list:{url:'/topic_collect/de_collect'}
 		};
 		this.api.getpost = {
-			list:{url:''}
+			list:{url:'/'}
 		}
 	};
 	toisapi(){
@@ -58,15 +58,16 @@ class ApiConfig {
 		for(let item in that.api){
 			rs[item] = {};
 			for(let v in that.api[item]){
+//				console.log(!!that.api[item][v]['url'])
 				that.api[item][v]['url']
 				? rs[item][v] = that.api[item][v]['url']
-				: console.log(rs[item][v])
+				: console.log('请求失败')
 			}
 			
 		}
 		return rs
 	};
-	
+	//请求get,自带url
 	tourl(){
 		var that = this;
 		var ugModule = that.toisapi()
@@ -83,6 +84,7 @@ class ApiConfig {
 		}
 		return rs
 	};
+	//请求get，不带url，get时，params的参数使用{params:params}
 	toapes(){
 		var that = this;
 //		var ugModule = that.toisapi()
@@ -94,6 +96,7 @@ class ApiConfig {
 		}
 		return rs
 	};
+//	请求post，不带url
 	toapesPost(){
 		var that = this;
 //		var ugModule = that.toisapi()
@@ -105,6 +108,7 @@ class ApiConfig {
 		}
 		return rs
 	};
+	//请求post，自带url，post时，参数直接用params
 	toPost(){
 		var that = this;
 		var ugModule = that.toisapi()
@@ -114,7 +118,7 @@ class ApiConfig {
 			for(let v in ugModule[items]){
 				
 				rs[items][v] = (params)=>{
-					console.log(params)
+//					console.log(params)
 					return axios.post(ugModule[items][v],params)
 				}
 			}

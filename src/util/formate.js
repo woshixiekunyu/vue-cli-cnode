@@ -1,5 +1,5 @@
 export const Mate = {
-	getNumDate(dateTime){
+	getNumDate(dateTime,idx){
 	  var min = 1000 * 60;
 	  var hour = min * 60;
 	  var day = hour * 24;
@@ -9,7 +9,7 @@ export const Mate = {
 	  var now = new Date().getTime();
 	  var diff = now - dateTime;
 	  if(diff<0){
-	    return "数据出错"
+	    result = '刚刚发表';
 	  }
 	  var yearC = diff / year;
 	  var monthC = diff / month;
@@ -28,7 +28,7 @@ export const Mate = {
 	    result = parseInt(dayC) + '天前';
 	  }else if(hourC >= 1){
 	    result = parseInt(hourC) + '小时前';
-	  }else if(minC >= 5){
+	  }else if(minC >= 1){
 	    result = parseInt(minC) + '分钟前';
 	  }else{
 	    result = '刚刚发表';

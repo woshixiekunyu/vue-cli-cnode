@@ -1,6 +1,7 @@
+//import Vuxx from './common';
 const conditionModule = {
 	state:{
-		roleListParams:{}
+		roleListParams:{},
 	},
 	mutations:{
 		changeroleListParams(state,a){

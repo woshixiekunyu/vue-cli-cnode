@@ -12,6 +12,7 @@
 
 <script>
 	import {ApiPost} from '@/api/index';
+	import {mapState} from 'vuex';
 	export default {
 		name:'login',
 		data(){
@@ -20,19 +21,24 @@
 				error_msg:''
 			}
 		},
+		computed:{
+			
+		},
 		methods:{
 			toLogin(){
 				var that = this;
-				console.log(that.userNameVal)
+//				console.log(that.userNameVal)
 				var params = {
 					accesstoken:that.userNameVal
 				}
 				ApiPost.user.list(params).then(res=>{
-					console.log(res)
+//					console.log(res)
 					if(res.data.success){
+						res.data.token = that.userNameVal;
 						var now = new Date();
-						document.cookie = 'userInfo='+that.userNameVal+';expires='+now;
-						that.$store.commit('getUserInfo','退出登录')
+						document.cookie = 'userInfo='+JSON.stringify(res.data)+';expires='+now;
+//						console.log(res.data)
+						that.$store.commit('getUserInfo',res.data)
 						history.go(-1)
 					}else{
 						that.error_msg = res.data.error_msg
@@ -41,7 +47,8 @@
 			}
 		},
 		mounted(){
-			console.log(ApiPost.api)
+//			console.log(ApiPost.api)
+//console.log(this.$store.state.user.isUser)
 		}
 	}
 </script>

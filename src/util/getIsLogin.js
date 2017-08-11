@@ -1,13 +1,28 @@
 export const isLogin = {
-	getIsLogin(){
-		var cookie = document.cookie.split(' ;')
+	getIsLogin(isWhat){
+		var cookie = document.cookie.split('; ')
 		var isLogining;
+		var Zan;
 		cookie.forEach(function(item){
 			var arr = item.split('=');
+			
 			if(arr[0] === 'userInfo'){
-				isLogining = arr[1];
+				isLogining = arr[1]+arr[2]+arr[3];
+//				console.log(isLogining)
+			}else if(arr[0] === 'zan'){
+				Zan = arr[1];
 			}
 		})
-		return isLogining;
+
+		if(isLogining){
+			if(isWhat === 'user'){
+				
+				return JSON.parse(isLogining);
+			}else if(isWhat === 'zan'){
+				return Zan;
+			}
+			
+		}
+		
 	}
 }
